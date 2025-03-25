@@ -76,50 +76,9 @@
 /*
 * Include all sensors because they will be needed to decode flash.
 */
-#include "devADXL362.h"
-#include "devAMG8834.h"
+
 #include "devMMA8451Q.h"
-#include "devMAG3110.h"
-#include "devL3GD20H.h"
-#include "devBME680.h"
-#include "devBNO055.h"
-#include "devBMX055.h"
-#include "devCCS811.h"
-#include "devHDC1000.h"
-#include "devRV8803C7.h"
-#include "devRF430CL331H.h"
 #include "devSSD1331.h"
-
-
-#if (WARP_BUILD_ENABLE_DEVADXL362)
-	volatile WarpSPIDeviceState			deviceADXL362State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVIS25xP)
-	#include "devIS25xP.h"
-	volatile WarpSPIDeviceState			deviceIS25xPState;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVISL23415)
-	#include "devISL23415.h"
-	volatile WarpSPIDeviceState			deviceISL23415State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVAT45DB)
-	#include "devAT45DB.h"
-	volatile WarpSPIDeviceState			deviceAT45DBState;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVICE40)
-	#include "devICE40.h"
-	volatile WarpSPIDeviceState			deviceICE40State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVBMX055)
-	volatile WarpI2CDeviceState			deviceBMX055accelState;
-	volatile WarpI2CDeviceState			deviceBMX055gyroState;
-	volatile WarpI2CDeviceState			deviceBMX055magState;
-#endif
 
 #if (WARP_BUILD_ENABLE_DEVMMA8451Q)
 	volatile WarpI2CDeviceState			deviceMMA8451QState;
@@ -128,78 +87,6 @@
 #if (WARP_BUILD_ENABLE_DEVINA219)
 	#include "devINA219.h"
 	volatile WarpI2CDeviceState			deviceINA219State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVBNO055)
-	#include "devBNO055.h"
-	volatile WarpI2CDeviceState			deviceBNO055State;	
-#endif
-#if (WARP_BUILD_ENABLE_DEVRF430CL331H)
-	#include "devRF430CL331H.h"
-	volatile WarpI2CDeviceState			deviceRF430CL331HState;	
-#endif
-#if (WARP_BUILD_ENABLE_DEVLPS25H)
-	#include "devLPS25H.h"
-	volatile WarpI2CDeviceState			deviceLPS25HState;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVHDC1000)
-	volatile WarpI2CDeviceState			deviceHDC1000State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVMAG3110)
-	volatile WarpI2CDeviceState			deviceMAG3110State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVSI7021)
-	#include "devSI7021.h"
-	volatile WarpI2CDeviceState			deviceSI7021State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVL3GD20H)
-	volatile WarpI2CDeviceState			deviceL3GD20HState;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVBME680)
-	volatile WarpI2CDeviceState			deviceBME680State;
-	volatile uint8_t				deviceBME680CalibrationValues[kWarpSizesBME680CalibrationValuesCount];
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVTCS34725)
-	#include "devTCS34725.h"
-	volatile WarpI2CDeviceState			deviceTCS34725State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVSI4705)
-	#include "devSI4705.h"
-	volatile WarpI2CDeviceState			deviceSI4705State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVCCS811)
-	volatile WarpI2CDeviceState			deviceCCS811State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVAMG8834)
-	volatile WarpI2CDeviceState			deviceAMG8834State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVAS7262)
-	#include "devAS7262.h"
-	volatile WarpI2CDeviceState			deviceAS7262State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVAS7263)
-	#include "devAS7263.h"
-	volatile WarpI2CDeviceState			deviceAS7263State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVRV8803C7)
-	volatile WarpI2CDeviceState			deviceRV8803C7State;
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVBGX)
-	#include "devBGX.h"
-	volatile WarpUARTDeviceState			deviceBGXState;
 #endif
 
 typedef enum
@@ -623,21 +510,6 @@ warpDeasserAllSPIchipSelects(void)
 	PORT_HAL_SetMuxMode(PORTB_BASE, 2, kPortMuxAsGpio);
 #endif
 
-#if (WARP_BUILD_ENABLE_DEVISL23415)
-	GPIO_DRV_SetPinOutput(kWarpPinISL23415_SPI_nCS);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVAT45DB)
-	GPIO_DRV_SetPinOutput(kWarpPinAT45DB_SPI_nCS);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVADXL362)
-	GPIO_DRV_SetPinOutput(kWarpPinADXL362_SPI_nCS);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVICE40)
-	GPIO_DRV_SetPinOutput(kWarpPinFPGA_nCS);
-#endif
 
 #if (WARP_BUILD_ENABLE_GLAUX_VARIANT)
 	GPIO_DRV_SetPinOutput(kGlauxPinFlash_SPI_nCS);	
@@ -1663,11 +1535,6 @@ main(void)
 /*
  *	Initialize all the sensors
  */
-#if (WARP_BUILD_ENABLE_DEVBMX055)
-		initBMX055accel(0x18	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsBMX055accel	);
-		initBMX055gyro(	0x68	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsBMX055gyro	);
-		initBMX055mag(	0x10	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsBMX055mag	);
-#endif
 
 #if (WARP_BUILD_ENABLE_DEVMMA8451Q)
 		initMMA8451Q(	0x1D	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsMMA8451Q	);
@@ -1678,220 +1545,6 @@ main(void)
 		initINA219(	0x40	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsINA219);
 #endif
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-#if (WARP_BUILD_ENABLE_DEVLPS25H)
-		initLPS25H(	0x5C	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsLPS25H	);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVHDC1000)
-		initHDC1000(	0x43	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsHDC1000	);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVMAG3110)
-		initMAG3110(	0x0E	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsMAG3110	);
-#endif
-
-// #if (WARP_BUILD_ENABLE_DEVSI7021)
-// 		initSI7021(	0x41	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsSI7021	);
-// #endif
-
-#if (WARP_BUILD_ENABLE_DEVL3GD20H)
-		initL3GD20H(	0x6A	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsL3GD20H	);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVBME680)
-		initBME680(	0x77	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsBME680	);
-#endif
-#if (WARP_BUILD_ENABLE_DEVBNO055)
-		initBNO055(0x28 /* i2cAddress */, kWarpDefaultSupplyVoltageMillivoltsBNO055);		
-#endif
-#if (WARP_BUILD_ENABLE_DEVRF430CL331H)
-		initRF430CL331H(0x1F /* i2cAddress */, kWarpDefaultSupplyVoltageMillivoltsRF430CL331H);		
-#endif
-#if (WARP_BUILD_ENABLE_DEVTCS34725)
-		initTCS34725(	0x29	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsTCS34725	);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVSI4705)
-		initSI4705(	0x11	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsSI4705	);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVCCS811)
-		initCCS811(	0x5A	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsCCS811	);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVAMG8834)
-		initAMG8834(	0x68	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsAMG8834	);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVAS7262)
-		initAS7262(	0x49	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsAS7262	);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVAS7263)
-		initAS7263(	0x49	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsAS7263	);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVRV8803C7)
-		initRV8803C7(	0x32	/* i2cAddress */,					kWarpDefaultSupplyVoltageMillivoltsRV8803C7	);
-		status = setRTCCountdownRV8803C7(0 /* countdown */, kWarpRV8803ExtTD_1HZ /* frequency */, false /* interupt_enable */);
-	if (status != kWarpStatusOK)
-	{
-		warpPrint("setRTCCountdownRV8803C7() failed...\n");
-	}
-	else
-	{
-		warpPrint("setRTCCountdownRV8803C7() succeeded.\n");
-	}
-
-	/*
-	 *	Set the CLKOUT frequency to 1Hz, to reduce CV^2 power on the CLKOUT pin.
-	 *	See RV-8803-C7_App-Manual.pdf section 3.6 (register is 0Dh)
-	 */
-		uint8_t	extReg;
-	status = readRTCRegisterRV8803C7(kWarpRV8803RegExt, &extReg);
-	if (status != kWarpStatusOK)
-	{
-		warpPrint("readRTCRegisterRV8803C7() failed...\n");
-	}
-	else
-	{
-		warpPrint("readRTCRegisterRV8803C7() succeeded.\n");
-	}
-
-	/*
-	 *	Set bits 3:2 (FD) to 10 (1Hz CLKOUT)
-	 */
-	extReg &= 0b11110011;
-	extReg |= 0b00001000;
-	status = writeRTCRegisterRV8803C7(kWarpRV8803RegExt, extReg);
-	if (status != kWarpStatusOK)
-	{
-		warpPrint("writeRTCRegisterRV8803C7() failed...\n");
-	}
-	else
-	{
-		warpPrint("writeRTCRegisterRV8803C7() succeeded.\n");
-	}
-#endif
-
-	/*
-	 *	Initialization: Devices hanging off SPI
-	 */
-
-#if (WARP_BUILD_ENABLE_DEVADXL362)
-	/*
-	 *	Only supported in main Warp variant.
-	 */
-		initADXL362(kWarpPinADXL362_SPI_nCS,						kWarpDefaultSupplyVoltageMillivoltsADXL362	);
-
-		status = readSensorRegisterADXL362(kWarpSensorConfigurationRegisterADXL362DEVID_AD, 1);
-	if (status != kWarpStatusOK)
-	{
-		warpPrint("ADXL362: SPI transaction to read DEVID_AD failed...\n");
-	}
-	else
-	{
-			warpPrint("ADXL362: DEVID_AD = [0x%02X].\n", deviceADXL362State.spiSinkBuffer[2]);
-	}
-
-		status = readSensorRegisterADXL362(kWarpSensorConfigurationRegisterADXL362DEVID_MST, 1);
-	if (status != kWarpStatusOK)
-	{
-		warpPrint("ADXL362: SPI transaction to read DEVID_MST failed...\n");
-	}
-	else
-	{
-			warpPrint("ADXL362: DEVID_MST = [0x%02X].\n", deviceADXL362State.spiSinkBuffer[2]);
-	}
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVIS25xP && WARP_BUILD_ENABLE_GLAUX_VARIANT)
-	/*
-	 *	Only supported in Glaux.
-	 */
-	initIS25xP(kGlauxPinFlash_SPI_nCS, kWarpDefaultSupplyVoltageMillivoltsIS25xP);
-
-#elif (WARP_BUILD_ENABLE_DEVIS25xP)
-	initIS25xP(kWarpPinIS25xP_SPI_nCS, kWarpDefaultSupplyVoltageMillivoltsIS25xP);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVISL23415)
-	/*
-	 *	Only supported in main Warp variant.
-	 */
-		initISL23415(kWarpPinISL23415_SPI_nCS, kWarpDefaultSupplyVoltageMillivoltsISL23415);
-
-	/*
-		 *	Take the DCPs out of shutdown by setting the SHDN bit in the ACR register
-	 */
-		status = writeDeviceRegisterISL23415(kWarpSensorConfigurationRegisterISL23415ACRwriteInstruction, 0x40);
-	if (status != kWarpStatusOK)
-	{
-		warpPrint("ISL23415: SPI transaction to write ACR failed...\n");
-	}
-
-		status = readDeviceRegisterISL23415(kWarpSensorConfigurationRegisterISL23415ACRreadInstruction);
-	if (status != kWarpStatusOK)
-	{
-		warpPrint("ISL23415: SPI transaction to read ACR failed...\n");
-	}
-	else
-	{
-		warpPrint("ISL23415 ACR=[0x%02X], ", deviceISL23415State.spiSinkBuffer[3]);
-	}
-
-		status = readDeviceRegisterISL23415(kWarpSensorConfigurationRegisterISL23415WRreadInstruction);
-	if (status != kWarpStatusOK)
-	{
-		warpPrint("ISL23415: SPI transaction to read WR failed...\n");
-	}
-	else
-	{
-		warpPrint("WR=[0x%02X]\n", deviceISL23415State.spiSinkBuffer[3]);
-	}
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVAT45DB)
-	/*
-	 *	Only supported in main Warp variant.
-	 */
-	status =  initAT45DB(kWarpPinAT45DB_SPI_nCS,						kWarpDefaultSupplyVoltageMillivoltsAT45DB	);
-	if (status != kWarpStatusOK)
-	{
-		warpPrint("AT45DB: initAT45DB() failed...\n");
-	}
-
-	status = spiTransactionAT45DB(&deviceAT45DBState, (uint8_t *)"\x9F\x00\x00\x00\x00\x00", 6 /* opCount */);
-	if (status != kWarpStatusOK)
-	{
-		warpPrint("AT45DB: SPI transaction to read Manufacturer ID failed...\n");
-	}
-	else
-	{
-		warpPrint("AT45DB Manufacturer ID=[0x%02X], Device ID=[0x%02X 0x%02X], Extended Device Information=[0x%02X 0x%02X]\n",
-			deviceAT45DBState.spiSinkBuffer[1],
-			deviceAT45DBState.spiSinkBuffer[2], deviceAT45DBState.spiSinkBuffer[3],
-			deviceAT45DBState.spiSinkBuffer[4], deviceAT45DBState.spiSinkBuffer[5]);
-	}
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVICE40)
-	/*
-	 *	Only supported in main Warp variant.
-	 */
-		initICE40(kWarpPinFPGA_nCS,							kWarpDefaultSupplyVoltageMillivoltsICE40	);
-#endif
-
-#if (WARP_BUILD_ENABLE_DEVBGX)
-	warpPrint("Configuring BGX Bluetooth.\n");
-	warpPrint("Enabling UART... ");
-	enableLPUARTpins();
-	warpPrint("done.\n");
-	warpPrint("initBGX()... ");
-	initBGX(kWarpDefaultSupplyVoltageMillivoltsBGX);
-	warpPrint("done.\n");
-#endif
 
 	/*
 	 *	If WARP_BUILD_DISABLE_SUPPLIES_BY_DEFAULT, will turn of the supplies
@@ -2000,54 +1653,13 @@ main(void)
 				warpPrint("%d'n", i);
 #if (WARP_CSVSTREAM_TO_FLASH)
 				
-				#if (WARP_BUILD_ENABLE_DEVIS25xP)
-					/*
-					*	Release the Flash from deep power-down
-					*/
-					releaseDeepPowerModeIS25xP();
-					warpPrint("\r\n\tFlash status after releasing from deep power mode and before reading data from it\n");
-					flashStatusIS25xP();
-				#endif
 				writeAllSensorsToFlash(0 /* menuDelayBetweenEachRun */, 0 /* loopForever */);
 #else
 				printAllSensors(true /* printHeadersAndCalibration */, true /* hexModeFlag */, 0 /* menuDelayBetweenEachRun */, false /* loopForever */);
 #endif
 			}
-			#if (WARP_BUILD_ENABLE_DEVBME680)
-				warpPrint("About to configureSensorBME680() for sleep...\n");
-					status = configureSensorBME680(	0b00000000,	/*	payloadCtrl_Hum: Sleep							*/
-									0b00000000,	/*	payloadCtrl_Meas: No temperature samples, no pressure samples, sleep	*/
-									0b00001000	/*	payloadGas_0: Turn off heater						*/
-				);			
-				if (status != kWarpStatusOK)
-				{
-					warpPrint("configureSensorBME680() failed...\n");
-				}
-				StateBME680();
-			#endif
-			#if (WARP_BUILD_ENABLE_DEVBNO055)
-				configureSensorRegisterBNO055(0x00, 0x02);	
-				StateBNO055();			
-			#endif
-			#if (WARP_BUILD_ENABLE_DEVRF430CL331H)
-				warpPrint("\r\n\tRF430CL control register status before going to standby mode\n");
-				StatusRF430CL331H();
-				configureSensorRegisterRF430CL331H(0x0040);
-				warpPrint("\r\n\tRF430CL control register status after going to standby mode\n");
-				StatusRF430CL331H();
-			#endif
-			#if (WARP_BUILD_ENABLE_DEVIS25xP)
-			/*
-			*	Put the Flash in deep power-down
-			*/
-				deepPowerModeIS25xP();
-				if (status != kWarpStatusOK)
-				{
-					warpPrint("\r\n\tError: communication failed");
-				}
-				warpPrint("\r\n\tFlash status after going into low power mode\n");
-				flashStatusIS25xP();
-			#endif
+			
+
 						
 			warpDisableI2Cpins();
 			blinkLED(kGlauxPinLED);
@@ -2820,6 +2432,7 @@ main(void)
 					key = warpWaitKey();
 					hexModeFlag = (key == 'h' ? true : false);
 					warpPrint("\n");
+					
 					printAllSensors(true /* printHeadersAndCalibration */, hexModeFlag,
 								menuDelayBetweenEachRun, true /* loopForever */);
 				}
@@ -3562,7 +3175,7 @@ printAllSensors(bool printHeadersAndCalibration, bool hexModeFlag,
 	 */
 	uint32_t readingCount		  = 0;
 	uint32_t numberOfConfigErrors = 0;
-
+	uint32_t maxReadings = 1000;
 
 	int rttKey = -1;
 
@@ -3681,7 +3294,7 @@ printAllSensors(bool printHeadersAndCalibration, bool hexModeFlag,
 #endif
 
 #if (WARP_BUILD_ENABLE_DEVMMA8451Q)
-		warpPrint(" MMA8451 x, MMA8451 y, MMA8451 z,");
+		warpPrint(" Time, MMA8451 x, MMA8451 y, MMA8451 z,");
 #endif
 
 #if (WARP_BUILD_ENABLE_DEVINA219)
@@ -3741,7 +3354,7 @@ printAllSensors(bool printHeadersAndCalibration, bool hexModeFlag,
 #endif
 
 #if (WARP_BUILD_ENABLE_DEVMMA8451Q)
-		printSensorDataMMA8451Q(hexModeFlag);
+		printSensorDataMMA8451Q(hexModeFlag, timeAtStart);
 #endif
 
 #if (WARP_BUILD_ENABLE_DEVINA219)
@@ -3779,7 +3392,7 @@ printAllSensors(bool printHeadersAndCalibration, bool hexModeFlag,
 #if (WARP_CSVSTREAM_FLASH_PRINT_METADATA)
 		warpPrint(" %12d, %6d,", RTC->TSR, RTC->TPR);
 #endif
-		warpPrint(" %u\n", numberOfConfigErrors);
+		//warpPrint(" %u\n", numberOfConfigErrors);
 
 		// if (menuDelayBetweenEachRun > 0)
 		// {
@@ -3803,9 +3416,13 @@ printAllSensors(bool printHeadersAndCalibration, bool hexModeFlag,
 		{
 			break;
 		}
+		if (!loopForever && readingCount >= maxReadings)
+        {
+            break;
+        }
 	}
 
-	while (loopForever);
+	while (loopForever || readingCount < maxReadings);
 }
 
 void
@@ -4209,7 +3826,8 @@ break;
 
 	case kWarpSensorMAG3110:
 	{
-/*
+
+		/*
  *	MAG3110: VDD 1.95 -- 3.6
  */
 #if (WARP_BUILD_ENABLE_DEVMAG3110)
