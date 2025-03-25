@@ -89,6 +89,7 @@ frdmkl03:
 	mkdir -p build/ksdk1.1/work/boards/Warp
 	mkdir -p build/ksdk1.1/work/demos/Warp/src
 	mkdir -p build/ksdk1.1/work/demos/Warp/armgcc/Warp
+	cp src/boot/ksdk1.1.0/*						build/ksdk1.1/work/demos/Warp/src/
 	cp -r tools/sdk/ksdk1.1.0/*					build/ksdk1.1/work
 	cp src/boot/ksdk1.1.0/SEGGER*					build/ksdk1.1/work/demos/Warp/src/
 	cp src/boot/ksdk1.1.0/config.h					build/ksdk1.1/work/demos/Warp/src/

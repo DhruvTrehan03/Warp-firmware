@@ -1,6 +1,7 @@
 #!/bin/sh
 	
-	# Uncomment this to set ARMGCC_DIR correctly: export ARMGCC_DIR=<full path to arm-gcc directory>
+	# Uncomment this to set ARMGCC_DIR correctly: 
+	export ARMGCC_DIR=/usr
 
 	mkdir -p work
 	mkdir -p work/boards/Warp
@@ -15,6 +16,7 @@
 	cp ../../src/boot/ksdk1.1.0/devBMX055.*				work/demos/Warp/src/
 	cp ../../src/boot/ksdk1.1.0/devADXL362.*			work/demos/Warp/src/
 	cp ../../src/boot/ksdk1.1.0/devMMA8451Q.*			work/demos/Warp/src/
+	cp ../../src/boot/ksdk1.1.0/devINA219.*				work/demos/Warp/src/
 	cp ../../src/boot/ksdk1.1.0/devLPS25H.*				work/demos/Warp/src/
 	cp ../../src/boot/ksdk1.1.0/devHDC1000.*			work/demos/Warp/src/
 	cp ../../src/boot/ksdk1.1.0/devMAG3110.*			work/demos/Warp/src/
@@ -25,6 +27,7 @@
 	cp ../../src/boot/ksdk1.1.0/devSI4705.*				work/demos/Warp/src/
 	cp ../../src/boot/ksdk1.1.0/devCCS811.*				work/demos/Warp/src/
 	cp ../../src/boot/ksdk1.1.0/devAMG8834.*			work/demos/Warp/src/
+	cp ../../src/boot/ksdk1.1.0/devSSD1331.*			work/demos/Warp/src/
 	cp ../../src/boot/ksdk1.1.0/devAS7262.*				work/demos/Warp/src/
 	cp ../../src/boot/ksdk1.1.0/devAS7263.*				work/demos/Warp/src/
 	cp ../../src/boot/ksdk1.1.0/devAS726x.*				work/demos/Warp/src/

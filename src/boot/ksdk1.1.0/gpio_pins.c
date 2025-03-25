@@ -171,7 +171,18 @@ gpio_output_pin_user_config_t	outputPins[] =
 		
 		
 	#elif (WARP_BUILD_ENABLE_FRDMKL03)
-
+				{
+			.pinName = kWarpPinISL23415_SPI_nCS,
+			.config.outputLogic = 1,
+			.config.slewRate = kPortSlowSlewRate,
+			.config.driveStrength = kPortLowDriveStrength,
+		},
+		{
+			.pinName = kWarpPinFPGA_nCS,
+			.config.outputLogic = 1,
+			.config.slewRate = kPortSlowSlewRate,
+			.config.driveStrength = kPortLowDriveStrength,
+		},
 	#endif
 
 	{
